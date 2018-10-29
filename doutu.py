@@ -1,8 +1,11 @@
+#coding:utf8
+
 import requests
 from bs4 import BeautifulSoup
 import urllib.request
 import os
 import datetime
+import threading
 
 URL = 'http://www.doutula.com/zz/list?page='
 headers = {
@@ -34,6 +37,12 @@ def save(img_url):
 if __name__ == '__main__':
 	num = input('请输入要下载的页数：')
 	str_time = datetime.datetime.now()
-	get_pic_url(int(num))
+
+	#多线程执行
+	th = threading.Thread(target=get_pic_url,args=[int(num)])
+	th.start()
+
+	# get_pic_url(int(num))#测试1：线性执行程序下载10页用时58秒，多线程下载10页用了55(结果：与想象不符)
+
 	end_time = datetime.datetime.now()
 	print("下载用时：",(end_time-str_time).seconds,'s')
