@@ -26,7 +26,8 @@ def get_pic_url(PAGE_NUM):
 		for item in aa:
 			imgg = item.img
 			img_url = imgg['data-original']
-			save(img_url)
+			th = threading.Thread(target=save, args=[img_url])
+			th.start()
 
 def save(img_url):
 	_name = img_url.split('/')
@@ -39,10 +40,12 @@ if __name__ == '__main__':
 	str_time = datetime.datetime.now()
 
 	#多线程执行
-	th = threading.Thread(target=get_pic_url,args=[int(num)])
-	th.start()
-
-	# get_pic_url(int(num))#测试1：线性执行程序下载10页用时58秒，多线程下载10页用了55(结果：与想象不符)
+	# th = threading.Thread(target=get_pic_url,args=[int(num)])
+	# th.start()
+	# th.join()
+	get_pic_url(int(num))#测试1：线性执行程序下载10页用时58秒，多线程下载10页用了55(结果：与想象不符)
+									  #测试2：调用save()也加上了多线程，下载10页用时3秒
+									  #测试3：调用get_pic_url()使用线程执行，save()执行多线程下载10页用时3秒
 
 	end_time = datetime.datetime.now()
 	print("下载用时：",(end_time-str_time).seconds,'s')
